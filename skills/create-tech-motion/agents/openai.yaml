@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Tech Motion"
+  short_description: "Generate and animate branded technology graphics"
+  default_prompt: "Use $create-tech-motion to turn my technology concept into a generated, masked, animated GIF."

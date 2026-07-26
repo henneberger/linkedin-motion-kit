@@ -24,6 +24,11 @@ def main() -> None:
         action="store_true",
         help="Render 12 low-resolution frames for a quick iteration",
     )
+    parser.add_argument(
+        "--prepare-only",
+        action="store_true",
+        help="Generate declared masks without rendering the GIF",
+    )
     args = parser.parse_args()
 
     scene_path = args.scene.resolve()
@@ -31,6 +36,17 @@ def main() -> None:
         scene = json.load(handle)
 
     project_root = scene_path.parent.parent
+    if args.prepare_only:
+        from .masking import prepare_masks
+
+        canvas = scene.get("canvas", {})
+        size = (int(canvas.get("width", 540)), int(canvas.get("height", 675)))
+        outputs = prepare_masks(scene, project_root, size)
+        print(f"Prepared {len(outputs)} masks")
+        for name, path in outputs.items():
+            print(f"  {name}: {path}")
+        return
+
     output = args.output or project_root / scene.get("output", "output/render.gif")
     output = output.resolve()
     result = render_gif(scene, project_root, output, preview=args.preview)

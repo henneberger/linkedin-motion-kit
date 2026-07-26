@@ -1,0 +1,199 @@
+{
+  "name": "Midnight Signal — Context Graph Comparison",
+  "base": "assets/source/context-comparison/base.png",
+  "output": "output/context-graphs.gif",
+  "canvas": {
+    "width": 540,
+    "height": 844,
+    "fps": 16,
+    "duration": 3.5,
+    "fit": "contain",
+    "background": "#07101f"
+  },
+  "masks": {
+    "left-input": {
+      "output": "assets/masks/context-comparison/left-input.png",
+      "feather": 4,
+      "shapes": [
+        {"shape": "ellipse", "box": [0.20, 0.13, 0.31, 0.24]}
+      ]
+    },
+    "prediction-model": {
+      "output": "assets/masks/context-comparison/prediction-model.png",
+      "feather": 5,
+      "shapes": [
+        {"shape": "polygon", "points": [[0.64, 0.29], [0.72, 0.25], [0.80, 0.30], [0.80, 0.37], [0.72, 0.40], [0.64, 0.36]]}
+      ]
+    },
+    "classification-model": {
+      "output": "assets/masks/context-comparison/classification-model.png",
+      "feather": 5,
+      "shapes": [
+        {"shape": "polygon", "points": [[0.64, 0.45], [0.72, 0.41], [0.81, 0.45], [0.81, 0.53], [0.72, 0.57], [0.64, 0.52]]}
+      ]
+    },
+    "rich-context": {
+      "output": "assets/masks/context-comparison/rich-context.png",
+      "feather": 4,
+      "shapes": [
+        {"shape": "ellipse", "box": [0.53, 0.55, 0.61, 0.63]},
+        {"shape": "ellipse", "box": [0.61, 0.60, 0.69, 0.68]},
+        {"shape": "ellipse", "box": [0.76, 0.59, 0.84, 0.68]},
+        {"shape": "ellipse", "box": [0.84, 0.54, 0.91, 0.62]},
+        {"shape": "ellipse", "box": [0.53, 0.63, 0.61, 0.71]},
+        {"shape": "ellipse", "box": [0.67, 0.63, 0.77, 0.73]},
+        {"shape": "ellipse", "box": [0.86, 0.63, 0.94, 0.71]},
+        {"shape": "ellipse", "box": [0.55, 0.70, 0.63, 0.78]},
+        {"shape": "ellipse", "box": [0.83, 0.70, 0.91, 0.78]},
+        {"shape": "ellipse", "box": [0.62, 0.78, 0.70, 0.86]},
+        {"shape": "ellipse", "box": [0.74, 0.78, 0.82, 0.86]},
+        {"shape": "ellipse", "box": [0.84, 0.79, 0.92, 0.87]},
+        {"shape": "ellipse", "box": [0.66, 0.85, 0.75, 0.94]},
+        {"shape": "ellipse", "box": [0.78, 0.85, 0.86, 0.94]}
+      ]
+    },
+    "sparse-context": {
+      "output": "assets/masks/context-comparison/sparse-context.png",
+      "feather": 3,
+      "shapes": [
+        {"shape": "ellipse", "box": [0.08, 0.43, 0.15, 0.50]},
+        {"shape": "ellipse", "box": [0.16, 0.49, 0.23, 0.56]},
+        {"shape": "ellipse", "box": [0.24, 0.53, 0.32, 0.61]},
+        {"shape": "ellipse", "box": [0.08, 0.54, 0.16, 0.62]},
+        {"shape": "ellipse", "box": [0.16, 0.64, 0.24, 0.72]},
+        {"shape": "ellipse", "box": [0.27, 0.63, 0.36, 0.72]},
+        {"shape": "ellipse", "box": [0.24, 0.76, 0.32, 0.84]}
+      ]
+    }
+  },
+  "layers": [
+    {
+      "name": "uncertain source",
+      "type": "masked_glow",
+      "mask": "left-input",
+      "color": "#a99be8",
+      "blur": 16,
+      "opacity": 0.38,
+      "speed": 0.42
+    },
+    {
+      "name": "sparse graph flicker",
+      "type": "masked_glow",
+      "mask": "sparse-context",
+      "color": "#8796b7",
+      "blur": 11,
+      "opacity": 0.22,
+      "speed": 0.34,
+      "offset": 0.4
+    },
+    {
+      "name": "prediction pulse",
+      "type": "masked_glow",
+      "mask": "prediction-model",
+      "color": "#4fe2ff",
+      "blur": 22,
+      "opacity": 0.72,
+      "speed": 0.62
+    },
+    {
+      "name": "prediction sheen",
+      "type": "masked_sheen",
+      "mask": "prediction-model",
+      "color": "#ffffff",
+      "width": 0.07,
+      "opacity": 0.16,
+      "speed": 0.43
+    },
+    {
+      "name": "classification pulse",
+      "type": "masked_glow",
+      "mask": "classification-model",
+      "color": "#ff9c83",
+      "blur": 22,
+      "opacity": 0.76,
+      "speed": 0.62,
+      "offset": 0.32
+    },
+    {
+      "name": "classification sheen",
+      "type": "masked_sheen",
+      "mask": "classification-model",
+      "color": "#fff5ee",
+      "width": 0.07,
+      "opacity": 0.16,
+      "speed": 0.43,
+      "offset": 0.3
+    },
+    {
+      "name": "rich graph pulse",
+      "type": "masked_glow",
+      "mask": "rich-context",
+      "color": "#61dcff",
+      "blur": 14,
+      "opacity": 0.45,
+      "speed": 0.5,
+      "offset": 0.58
+    },
+    {
+      "name": "weak wandering context",
+      "type": "flow_path",
+      "points": [[0.255, 0.18], [0.30, 0.33], [0.17, 0.39], [0.33, 0.52]],
+      "color": "#aa9ce8",
+      "particles": 1,
+      "radius": 2.3,
+      "speed": 0.28
+    },
+    {
+      "name": "prediction ingress",
+      "type": "flow_path",
+      "points": [[0.73, 0.18], [0.73, 0.23], [0.72, 0.28], [0.72, 0.33]],
+      "color": "#56e4ff",
+      "particles": 2,
+      "radius": 2.8,
+      "speed": 0.72
+    },
+    {
+      "name": "model handoff",
+      "type": "flow_path",
+      "points": [[0.72, 0.34], [0.72, 0.39], [0.72, 0.44], [0.72, 0.49]],
+      "color": "#ffb08c",
+      "particles": 2,
+      "radius": 2.8,
+      "speed": 0.64,
+      "offset": 0.28
+    },
+    {
+      "name": "context expansion",
+      "type": "flow_path",
+      "points": [[0.72, 0.49], [0.72, 0.56], [0.72, 0.61], [0.72, 0.67]],
+      "color": "#68e7ff",
+      "particles": 3,
+      "radius": 3.0,
+      "speed": 0.7,
+      "offset": 0.52
+    },
+    {
+      "name": "classified branch",
+      "type": "flow_path",
+      "points": [[0.72, 0.50], [0.76, 0.55], [0.84, 0.56], [0.88, 0.62]],
+      "color": "#ff9c83",
+      "particles": 2,
+      "radius": 2.6,
+      "speed": 0.58,
+      "offset": 0.12
+    },
+    {
+      "name": "context orbit",
+      "type": "orbit",
+      "center": [0.72, 0.70],
+      "radius": [0.19, 0.16],
+      "color": "#a993ff",
+      "particles": 2,
+      "dot_radius": 2.1,
+      "speed": 0.24
+    }
+  ],
+  "finishing": {
+    "breathe": true
+  }
+}

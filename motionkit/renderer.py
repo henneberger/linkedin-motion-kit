@@ -6,6 +6,8 @@ from typing import Any
 
 from PIL import Image, ImageChops, ImageDraw, ImageEnhance, ImageFilter
 
+from .masking import prepare_masks
+
 
 Color = tuple[int, int, int]
 
@@ -30,6 +32,25 @@ def _cover(image: Image.Image, size: tuple[int, int]) -> Image.Image:
     left = (scaled.width - target_w) // 2
     top = (scaled.height - target_h) // 2
     return scaled.crop((left, top, left + target_w, top + target_h))
+
+
+def _contain(
+    image: Image.Image,
+    size: tuple[int, int],
+    background: Color,
+) -> Image.Image:
+    target_w, target_h = size
+    scale = min(target_w / image.width, target_h / image.height)
+    scaled = image.resize(
+        (round(image.width * scale), round(image.height * scale)),
+        Image.Resampling.LANCZOS,
+    )
+    result = Image.new("RGB", size, background)
+    result.paste(
+        scaled,
+        ((target_w - scaled.width) // 2, (target_h - scaled.height) // 2),
+    )
+    return result
 
 
 def _load_mask(root: Path, source: str, size: tuple[int, int]) -> Image.Image:
@@ -155,7 +176,15 @@ def _sheen_layer(
     width, height = frame.size
     color = _hex(layer.get("color", "#ffffff"))
     band = max(12, int(width * float(layer.get("width", 0.11))))
-    position = int((-band * 2) + _phase(t, float(layer.get("speed", 0.7))) * (width + band * 4))
+    position = int(
+        (-band * 2)
+        + _phase(
+            t,
+            float(layer.get("speed", 0.7)),
+            float(layer.get("offset", 0.0)),
+        )
+        * (width + band * 4)
+    )
     sweep = Image.new("L", frame.size, 0)
     draw = ImageDraw.Draw(sweep)
     draw.polygon(
@@ -266,11 +295,22 @@ def render_gif(
         frame_count = 12
 
     size = (width, height)
-    base = _cover(Image.open(_resolve(root, scene["base"])).convert("RGB"), size)
+    source = Image.open(_resolve(root, scene["base"])).convert("RGB")
+    fit = canvas.get("fit", "cover")
+    if fit == "contain":
+        base = _contain(source, size, _hex(canvas.get("background", "#07101f")))
+    elif fit == "cover":
+        base = _cover(source, size)
+    else:
+        raise ValueError("canvas.fit must be 'cover' or 'contain'")
+
+    generated_masks = prepare_masks(scene, root, size)
     masks: dict[str, Image.Image] = {}
     for layer in scene.get("layers", []):
         if "mask" in layer and layer["mask"] not in masks:
-            masks[layer["mask"]] = _load_mask(root, layer["mask"], size)
+            mask_reference = layer["mask"]
+            source_path = generated_masks.get(mask_reference, mask_reference)
+            masks[mask_reference] = _load_mask(root, str(source_path), size)
 
     frames = [
         _animate_frame(base, scene, root, index / frame_count, masks)

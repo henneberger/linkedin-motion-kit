@@ -1,15 +1,46 @@
 # LinkedIn Motion Kit
 
-A small, local pipeline for turning a Codex-generated tech illustration into a polished looping GIF. The included preset animates an abstract data graph; the same layer stack works for AI, cloud, database, security, and developer-tool visuals.
+A Codex-driven pipeline that turns a plain-English technology concept into original artwork, derives masks and motion paths from that generated image, and renders a polished looping GIF. It does not require you to provide or manually mask a still.
 
 The art direction is called **Midnight Signal**: ink-black editorial backgrounds, glass and anodized-metal forms, cyan/coral/lilac accents, and motion that feels precise rather than hyperactive.
 
 ![Midnight Signal abstract graph animation](output/abstract-graph.gif)
 
+## Generate from a brief
+
+Install the bundled Codex skill once:
+
+```bash
+python scripts/install_codex_skill.py
+```
+
+Then open this repository in Codex and ask:
+
+```text
+Use $create-tech-motion to compare two context graphs: one without search,
+and one that uses prediction and classification models.
+```
+
+Codex will:
+
+1. generate concept-specific artwork with built-in image generation;
+2. inspect the actual output and describe its regions as normalized mask primitives;
+3. trace visible routes with animation paths;
+4. generate the masks and render the final GIF;
+5. visually verify the animated result.
+
+The local Python renderer does not call an image API. The Codex skill orchestrates image generation, inspection, mask derivation, and rendering; the Python layer makes those masks and animations deterministic and repeatable.
+
+### Example generated from that brief
+
+![Comparison of a context graph without search and one using prediction and classification](output/context-graphs.gif)
+
 ## What is included
 
 - A generated abstract-graph base image in `assets/source/`
+- A generated two-context-graph comparison and its complete scene preset
 - A browser-based paint/erase mask editor in `mask-studio/`
+- A bundled `$create-tech-motion` Codex skill for brief-to-GIF generation
 - A JSON layer stack with masked glow, masked sheen, path particles, orbits, and finishing effects
 - A deterministic Python renderer that creates a seamless looping GIF
 - Reusable Codex image-generation prompts for six tech themes in `PROMPTS.md`
@@ -34,9 +65,9 @@ python -m motionkit presets/abstract-graph.json --preview -o output/preview.gif
 
 ## The pipeline
 
-1. **Generate a still with Codex.** Start from the style block and one subject module in `PROMPTS.md`. The still should contain clean, traceable routes and isolated regions that can be masked.
-2. **Create masks.** Open `mask-studio/index.html`, load the still, paint an animated region, and export the black-and-white PNG into `assets/masks/`.
-3. **Define paths and layers.** Duplicate `presets/abstract-graph.json`, point `base` and `mask` entries at your assets, then edit normalized path coordinates.
+1. **Generate a still with Codex.** The bundled skill turns the brief into a Midnight Signal prompt and saves the generated output into the project.
+2. **Derive masks.** Codex inspects that output and adds normalized mask primitives to the scene. The renderer materializes them as PNGs automatically. Mask Studio remains available for optional hand refinement.
+3. **Define paths and layers.** Codex traces the actual generated connections and configures glow, sheen, path, and orbit layers.
 4. **Render.** Run `python -m motionkit presets/your-scene.json`.
 5. **Post.** The default 540×675, 16 fps, 3-second output is deliberately modest in file size and loops cleanly.
 
@@ -87,4 +118,5 @@ Keep the palette, materials, background, and general motion density unchanged ac
 - GIF has a 256-color limit. The renderer quantizes each frame; gradients may show slight banding.
 - Keep critical content inside the central 80 percent because social feeds may preview-crop.
 - The renderer uses center-crop/cover when the generated still does not exactly match the configured canvas.
+- Set `canvas.fit` to `contain` when headings or edge content must be preserved.
 - Masks are ordinary grayscale PNG files: white receives the effect, black protects the image, gray gives partial influence.
