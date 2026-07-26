@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Midnight Signal Mask Studio</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #07101f;
+      --panel: #0d1728;
+      --line: #263550;
+      --text: #edf7ff;
+      --muted: #91a2ba;
+      --cyan: #5de3ff;
+      --coral: #ff9c85;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 10%, #132d45 0, transparent 35%),
+        var(--ink);
+      color: var(--text);
+      font: 14px/1.5 Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    .shell { max-width: 1200px; margin: auto; padding: 28px; }
+    header { display: flex; justify-content: space-between; gap: 20px; align-items: end; }
+    .eyebrow { color: var(--cyan); font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { margin: 5px 0 0; font-size: clamp(26px, 4vw, 44px); letter-spacing: -.04em; }
+    .lede { max-width: 560px; margin: 8px 0 0; color: var(--muted); }
+    .studio {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) 260px;
+      gap: 18px;
+      margin-top: 24px;
+    }
+    .stage, .controls {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--panel) 92%, transparent);
+      box-shadow: 0 28px 80px #0008;
+    }
+    .stage {
+      display: grid;
+      place-items: center;
+      min-height: 70vh;
+      padding: 22px;
+      overflow: hidden;
+    }
+    canvas {
+      max-width: 100%;
+      max-height: 74vh;
+      border-radius: 8px;
+      background: #020711;
+      cursor: crosshair;
+      touch-action: none;
+      box-shadow: 0 10px 40px #000a;
+    }
+    .controls { padding: 20px; }
+    .group { padding: 16px 0; border-bottom: 1px solid var(--line); }
+    .group:first-child { padding-top: 0; }
+    .group:last-child { border-bottom: 0; }
+    label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 12px; }
+    input[type="file"] { width: 100%; color: var(--muted); }
+    input[type="range"] { width: 100%; accent-color: var(--cyan); }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    button {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #15233a;
+      color: var(--text);
+      cursor: pointer;
+    }
+    button:hover, button.active { border-color: var(--cyan); background: #17324b; }
+    button.primary { border: 0; background: linear-gradient(120deg, var(--cyan), #88a7ff); color: #05101d; font-weight: 750; }
+    .hint { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+    .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--coral); margin-right: 6px; }
+    @media (max-width: 760px) {
+      .studio { grid-template-columns: 1fr; }
+      .stage { min-height: auto; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <div class="eyebrow">Midnight Signal</div>
+        <h1>Mask Studio</h1>
+        <p class="lede">Paint the parts of a generated still that should glow, shimmer, pulse, or receive any future layer effect.</p>
+      </div>
+      <div class="eyebrow"><span class="dot"></span>local only</div>
+    </header>
+    <section class="studio">
+      <div class="stage"><canvas id="canvas" width="540" height="675"></canvas></div>
+      <aside class="controls">
+        <div class="group">
+          <label for="imageInput">1. Load base image</label>
+          <input id="imageInput" type="file" accept="image/*">
+          <p class="hint">The image never leaves your browser.</p>
+        </div>
+        <div class="group">
+          <label>2. Brush mode</label>
+          <div class="row">
+            <button id="paintBtn" class="active">Paint</button>
+            <button id="eraseBtn">Erase</button>
+          </div>
+        </div>
+        <div class="group">
+          <label for="size">Brush size <span id="sizeValue">44</span>px</label>
+          <input id="size" type="range" min="4" max="180" value="44">
+          <label for="opacity" style="margin-top:14px">Mask preview opacity</label>
+          <input id="opacity" type="range" min="10" max="90" value="52">
+        </div>
+        <div class="group">
+          <div class="row">
+            <button id="undoBtn">Undo</button>
+            <button id="clearBtn">Clear</button>
+          </div>
+        </div>
+        <div class="group">
+          <button id="exportBtn" class="primary">Export mask PNG</button>
+          <p class="hint">White = animated. Black = protected. Save into <code>assets/masks/</code>.</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script>
+    const canvas = document.querySelector("#canvas");
+    const ctx = canvas.getContext("2d");
+    const mask = document.createElement("canvas");
+    const maskCtx = mask.getContext("2d");
+    const preview = document.createElement("canvas");
+    const previewCtx = preview.getContext("2d");
+    const base = new Image();
+    const history = [];
+    let drawing = false;
+    let erasing = false;
+    let last = null;
+
+    function fitCover(image, targetWidth, targetHeight) {
+      const scale = Math.max(targetWidth / image.width, targetHeight / image.height);
+      const width = image.width * scale;
+      const height = image.height * scale;
+      return { x: (targetWidth - width) / 2, y: (targetHeight - height) / 2, width, height };
+    }
+
+    function render() {
+      ctx.fillStyle = "#020711";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      if (base.src) {
+        const box = fitCover(base, canvas.width, canvas.height);
+        ctx.drawImage(base, box.x, box.y, box.width, box.height);
+      }
+      previewCtx.clearRect(0, 0, preview.width, preview.height);
+      previewCtx.globalCompositeOperation = "source-over";
+      previewCtx.drawImage(mask, 0, 0);
+      previewCtx.globalCompositeOperation = "source-in";
+      previewCtx.fillStyle = "#ff416c";
+      previewCtx.fillRect(0, 0, preview.width, preview.height);
+      ctx.save();
+      ctx.globalAlpha = Number(document.querySelector("#opacity").value) / 100;
+      ctx.globalCompositeOperation = "screen";
+      ctx.drawImage(preview, 0, 0);
+      ctx.restore();
+    }
+
+    function snapshot() {
+      history.push(maskCtx.getImageData(0, 0, mask.width, mask.height));
+      if (history.length > 30) history.shift();
+    }
+
+    function pointer(event) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: (event.clientX - rect.left) * canvas.width / rect.width,
+        y: (event.clientY - rect.top) * canvas.height / rect.height
+      };
+    }
+
+    function stroke(from, to) {
+      const size = Number(document.querySelector("#size").value);
+      maskCtx.save();
+      maskCtx.globalCompositeOperation = erasing ? "destination-out" : "source-over";
+      maskCtx.strokeStyle = "#fff";
+      maskCtx.lineWidth = size;
+      maskCtx.lineCap = "round";
+      maskCtx.lineJoin = "round";
+      maskCtx.beginPath();
+      maskCtx.moveTo(from.x, from.y);
+      maskCtx.lineTo(to.x, to.y);
+      maskCtx.stroke();
+      maskCtx.restore();
+      render();
+    }
+
+    canvas.addEventListener("pointerdown", event => {
+      snapshot();
+      drawing = true;
+      last = pointer(event);
+      canvas.setPointerCapture(event.pointerId);
+      stroke(last, last);
+    });
+    canvas.addEventListener("pointermove", event => {
+      if (!drawing) return;
+      const next = pointer(event);
+      stroke(last, next);
+      last = next;
+    });
+    canvas.addEventListener("pointerup", () => { drawing = false; });
+    canvas.addEventListener("pointercancel", () => { drawing = false; });
+
+    document.querySelector("#imageInput").addEventListener("change", event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      base.onload = () => {
+        canvas.width = 540;
+        canvas.height = 675;
+        mask.width = canvas.width;
+        mask.height = canvas.height;
+        preview.width = canvas.width;
+        preview.height = canvas.height;
+        history.length = 0;
+        render();
+      };
+      base.src = URL.createObjectURL(file);
+    });
+    document.querySelector("#paintBtn").onclick = () => {
+      erasing = false;
+      document.querySelector("#paintBtn").classList.add("active");
+      document.querySelector("#eraseBtn").classList.remove("active");
+    };
+    document.querySelector("#eraseBtn").onclick = () => {
+      erasing = true;
+      document.querySelector("#eraseBtn").classList.add("active");
+      document.querySelector("#paintBtn").classList.remove("active");
+    };
+    document.querySelector("#size").oninput = event => {
+      document.querySelector("#sizeValue").textContent = event.target.value;
+    };
+    document.querySelector("#opacity").oninput = render;
+    document.querySelector("#undoBtn").onclick = () => {
+      const previous = history.pop();
+      if (previous) maskCtx.putImageData(previous, 0, 0);
+      render();
+    };
+    document.querySelector("#clearBtn").onclick = () => {
+      snapshot();
+      maskCtx.clearRect(0, 0, mask.width, mask.height);
+      render();
+    };
+    document.querySelector("#exportBtn").onclick = () => {
+      const exported = document.createElement("canvas");
+      exported.width = mask.width;
+      exported.height = mask.height;
+      const exportCtx = exported.getContext("2d");
+      exportCtx.fillStyle = "#000";
+      exportCtx.fillRect(0, 0, exported.width, exported.height);
+      exportCtx.drawImage(mask, 0, 0);
+      const link = document.createElement("a");
+      link.download = "animation-mask.png";
+      link.href = exported.toDataURL("image/png");
+      link.click();
+    };
+
+    mask.width = canvas.width;
+    mask.height = canvas.height;
+    preview.width = canvas.width;
+    preview.height = canvas.height;
+    render();
+  </script>
+</body>
+</html>
