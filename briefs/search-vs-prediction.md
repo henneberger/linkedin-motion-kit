@@ -10,17 +10,22 @@ Most companies use their context graph for retrospective search. The larger valu
 >
 > They use it for search:
 >
-> “What happened?”  
-> “Where is this documented?”  
+> “What happened?”
+>
+> “Where is this documented?”
+>
 > “What do we know about this customer?”
 >
 > Useful, but limited.
 >
 > The real value is prediction and classification.
 >
-> Will this customer churn?  
-> Is this transaction fraudulent?  
-> Which account is likely to expand?  
+> Will this customer churn?
+>
+> Is this transaction fraudulent?
+>
+> Which account is likely to expand?
+>
 > What happens if we upgrade this user?
 >
 > A rich context graph gives the model more than isolated rows. It gives it the relationships surrounding each decision.
