@@ -6,6 +6,10 @@ The art direction is called **Midnight Signal**: ink-black editorial backgrounds
 
 ![Midnight Signal abstract graph animation](output/abstract-graph.gif)
 
+### Landscape example: search versus prediction
+
+![A sparse search graph transforming into a rich predictive context graph](output/search-vs-prediction.gif)
+
 ## Generate from a brief
 
 Install the bundled Codex skill once:
@@ -81,6 +85,10 @@ Image generation establishes the visual world. Local compositing handles animati
 | `masked_sheen` | Sweep a highlight through glass/metal | `mask`, `color`, `width`, `opacity`, `speed` |
 | `flow_path` | Move packets through a connection | `points`, `color`, `particles`, `radius`, `speed`, `offset` |
 | `orbit` | Add a scanning/status orbit | `center`, `radius`, `color`, `particles`, `speed` |
+| `path_trace` | Progressively illuminate part of a route | `points`, `color`, `length`, `width`, `speed` |
+| `scan_line` | Sweep a clipped scanner across a region | `mask`, `axis`, `color`, `width`, `speed` |
+| `ripple` | Emit expanding decision/status rings | `center`, `radius`, `count`, `color`, `speed` |
+| `masked_particles` | Drift a deterministic particle field inside a mask | `mask`, `direction`, `count`, `seed`, `speed` |
 
 Coordinates are normalized: `[0, 0]` is top-left and `[1, 1]` is bottom-right. A `flow_path` accepts 2 points for a line, 3 for a quadratic curve, or 4 for a cubic Bézier curve.
 

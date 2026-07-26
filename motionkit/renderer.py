@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import random
 from pathlib import Path
 from typing import Any
 
@@ -234,6 +235,184 @@ def _orbit_layer(
     return Image.alpha_composite(Image.alpha_composite(frame, glow), overlay)
 
 
+def _path_trace_layer(
+    frame: Image.Image,
+    layer: dict[str, Any],
+    t: float,
+    size: tuple[int, int],
+) -> Image.Image:
+    width, height = size
+    color = _hex(layer.get("color", "#55ddff"))
+    speed = float(layer.get("speed", 0.5))
+    offset = float(layer.get("offset", 0.0))
+    trace_length = max(0.03, min(float(layer.get("length", 0.28)), 0.95))
+    line_width = max(1, round(float(layer.get("width", 2.2))))
+    steps = max(12, int(layer.get("steps", 48)))
+    head = _phase(t, speed, offset)
+    points = layer["points"]
+
+    glow = Image.new("RGBA", size, (0, 0, 0, 0))
+    core = Image.new("RGBA", size, (0, 0, 0, 0))
+    glow_draw = ImageDraw.Draw(glow)
+    core_draw = ImageDraw.Draw(core)
+    previous: tuple[float, float] | None = None
+    previous_alpha = 0
+
+    for index in range(steps + 1):
+        progress = index / steps
+        u = head - trace_length + progress * trace_length
+        if u < 0 or u > 1:
+            previous = None
+            continue
+        x, y = _bezier(points, u)
+        point = (x * width, y * height)
+        alpha = round(220 * (progress**0.7) * (math.sin(math.pi * u) ** 0.25))
+        if previous is not None:
+            segment_alpha = min(alpha, previous_alpha)
+            glow_draw.line(
+                [previous, point],
+                fill=(*color, round(segment_alpha * 0.62)),
+                width=line_width * 5,
+            )
+            core_draw.line(
+                [previous, point],
+                fill=(*color, segment_alpha),
+                width=line_width,
+            )
+        previous = point
+        previous_alpha = alpha
+
+    glow = glow.filter(ImageFilter.GaussianBlur(line_width * 2.2))
+    return Image.alpha_composite(Image.alpha_composite(frame, glow), core)
+
+
+def _scan_line_layer(
+    frame: Image.Image,
+    mask: Image.Image,
+    layer: dict[str, Any],
+    t: float,
+) -> Image.Image:
+    width, height = frame.size
+    axis = layer.get("axis", "x")
+    color = _hex(layer.get("color", "#93a6ff"))
+    speed = float(layer.get("speed", 0.45))
+    offset = float(layer.get("offset", 0.0))
+    band = max(3, round(float(layer.get("width", 0.035)) * min(frame.size)))
+    scan = Image.new("L", frame.size, 0)
+    draw = ImageDraw.Draw(scan)
+    if axis == "x":
+        position = round(_phase(t, speed, offset) * (width + band * 2) - band)
+        draw.rectangle((position - band, 0, position + band, height), fill=235)
+    elif axis == "y":
+        position = round(_phase(t, speed, offset) * (height + band * 2) - band)
+        draw.rectangle((0, position - band, width, position + band), fill=235)
+    else:
+        raise ValueError("scan_line axis must be 'x' or 'y'")
+    scan = scan.filter(ImageFilter.GaussianBlur(band * 0.7))
+    clipped = ImageChops.multiply(scan, mask)
+    frame = _composite_color(
+        frame,
+        clipped.filter(ImageFilter.GaussianBlur(band * 1.4)),
+        color,
+        float(layer.get("opacity", 0.55)) * 0.55,
+    )
+    return _composite_color(
+        frame,
+        clipped,
+        color,
+        float(layer.get("opacity", 0.55)),
+    )
+
+
+def _ripple_layer(
+    frame: Image.Image,
+    layer: dict[str, Any],
+    t: float,
+    size: tuple[int, int],
+) -> Image.Image:
+    width, height = size
+    cx, cy = layer["center"]
+    color = _hex(layer.get("color", "#55ddff"))
+    count = int(layer.get("count", 3))
+    speed = float(layer.get("speed", 0.65))
+    offset = float(layer.get("offset", 0.0))
+    max_radius = float(layer.get("radius", 0.14)) * min(size)
+    aspect = float(layer.get("aspect", 1.0))
+    line_width = max(1, round(float(layer.get("width", 1.5))))
+    overlay = Image.new("RGBA", size, (0, 0, 0, 0))
+    glow = Image.new("RGBA", size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+    glow_draw = ImageDraw.Draw(glow)
+
+    for index in range(count):
+        phase = _phase(t, speed, offset + index / count)
+        radius = max_radius * phase
+        alpha = round(190 * ((1 - phase) ** 1.35))
+        box = (
+            cx * width - radius * aspect,
+            cy * height - radius,
+            cx * width + radius * aspect,
+            cy * height + radius,
+        )
+        glow_draw.ellipse(box, outline=(*color, round(alpha * 0.65)), width=line_width * 5)
+        draw.ellipse(box, outline=(*color, alpha), width=line_width)
+
+    glow = glow.filter(ImageFilter.GaussianBlur(line_width * 2.5))
+    return Image.alpha_composite(Image.alpha_composite(frame, glow), overlay)
+
+
+def _masked_particles_layer(
+    frame: Image.Image,
+    mask: Image.Image,
+    layer: dict[str, Any],
+    t: float,
+) -> Image.Image:
+    width, height = frame.size
+    color = _hex(layer.get("color", "#55ddff"))
+    count = int(layer.get("count", 28))
+    speed = float(layer.get("speed", 0.12))
+    direction = layer.get("direction", "up")
+    seed = int(layer.get("seed", 7))
+    rng = random.Random(seed)
+    particles = [
+        (rng.random(), rng.random(), rng.random(), rng.uniform(0.7, 1.35))
+        for _ in range(count)
+    ]
+    overlay = Image.new("RGBA", frame.size, (0, 0, 0, 0))
+    glow = Image.new("RGBA", frame.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+    glow_draw = ImageDraw.Draw(glow)
+    base_radius = float(layer.get("radius", 1.4))
+
+    for base_x, base_y, phase_offset, scale in particles:
+        travel = _phase(t, speed, phase_offset)
+        if direction == "up":
+            x, y = base_x, (base_y - travel) % 1.0
+        elif direction == "right":
+            x, y = (base_x + travel) % 1.0, base_y
+        elif direction == "down":
+            x, y = base_x, (base_y + travel) % 1.0
+        else:
+            raise ValueError("masked_particles direction must be 'up', 'right', or 'down'")
+        px, py = round(x * (width - 1)), round(y * (height - 1))
+        influence = mask.getpixel((px, py)) / 255
+        if influence < 0.08:
+            continue
+        radius = base_radius * scale
+        alpha = round(180 * influence)
+        glow_draw.ellipse(
+            (px - radius * 3, py - radius * 3, px + radius * 3, py + radius * 3),
+            fill=(*color, round(alpha * 0.7)),
+        )
+        draw.ellipse(
+            (px - radius, py - radius, px + radius, py + radius),
+            fill=(235, 250, 255, alpha),
+        )
+
+    glow = glow.filter(ImageFilter.GaussianBlur(base_radius * 1.8))
+    return Image.alpha_composite(Image.alpha_composite(frame, glow), overlay)
+
+
 def _animate_frame(
     base: Image.Image,
     scene: dict[str, Any],
@@ -267,6 +446,14 @@ def _animate_frame(
             frame = _flow_layer(frame, layer, t, size)
         elif kind == "orbit":
             frame = _orbit_layer(frame, layer, t, size)
+        elif kind == "path_trace":
+            frame = _path_trace_layer(frame, layer, t, size)
+        elif kind == "scan_line":
+            frame = _scan_line_layer(frame, masks[layer["mask"]], layer, t)
+        elif kind == "ripple":
+            frame = _ripple_layer(frame, layer, t, size)
+        elif kind == "masked_particles":
+            frame = _masked_particles_layer(frame, masks[layer["mask"]], layer, t)
         else:
             raise ValueError(f"Unknown layer type: {kind}")
 

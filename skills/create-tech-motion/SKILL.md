@@ -19,6 +19,7 @@ Create the artwork and the animation. Never stop after writing a prompt, generat
    - Declare named `masks` using normalized ellipse, rectangle, rounded rectangle, polygon, or line primitives.
    - Reference those names from `masked_glow` and `masked_sheen` layers.
    - Add `flow_path` layers that trace visible connections. Use 2 points for a line, 3 for a quadratic curve, or 4 for a cubic curve.
+   - Use `path_trace` for progressive relationship reveals, `scan_line` for search or inspection, `ripple` for decisions/confidence, and `masked_particles` for activity inside a bounded graph.
    - Use subdued motion on the weak/negative side of comparisons and clearer staged motion on the strong/positive side.
 7. Run `.venv/bin/python -m motionkit presets/<slug>.json`. The renderer must generate declared mask PNGs automatically before rendering.
 8. Build a six-frame contact sheet with ImageMagick and inspect it with `view_image`.

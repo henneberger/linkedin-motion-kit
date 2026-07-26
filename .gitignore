@@ -6,3 +6,4 @@ output/*
 !output/.gitkeep
 !output/abstract-graph.gif
 !output/context-graphs.gif
+!output/search-vs-prediction.gif

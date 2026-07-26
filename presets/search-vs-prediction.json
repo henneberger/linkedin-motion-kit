@@ -1,0 +1,298 @@
+{
+  "name": "Midnight Signal — Search vs Prediction",
+  "base": "assets/source/search-vs-prediction/base.png",
+  "output": "output/search-vs-prediction.gif",
+  "canvas": {
+    "width": 800,
+    "height": 440,
+    "fps": 16,
+    "duration": 4.0,
+    "fit": "contain",
+    "background": "#07101f"
+  },
+  "masks": {
+    "search-graph": {
+      "output": "assets/masks/search-vs-prediction/search-graph.png",
+      "feather": 3,
+      "shapes": [
+        {"shape": "ellipse", "box": [0.043, 0.37, 0.075, 0.47]},
+        {"shape": "ellipse", "box": [0.123, 0.27, 0.151, 0.37]},
+        {"shape": "ellipse", "box": [0.218, 0.28, 0.247, 0.38]},
+        {"shape": "ellipse", "box": [0.112, 0.45, 0.143, 0.55]},
+        {"shape": "ellipse", "box": [0.060, 0.54, 0.087, 0.64]},
+        {"shape": "ellipse", "box": [0.137, 0.58, 0.166, 0.68]},
+        {"shape": "ellipse", "box": [0.208, 0.63, 0.237, 0.73]},
+        {"shape": "ellipse", "box": [0.245, 0.43, 0.273, 0.53]}
+      ]
+    },
+    "scan-plane": {
+      "output": "assets/masks/search-vs-prediction/scan-plane.png",
+      "feather": 2,
+      "shapes": [
+        {"shape": "polygon", "points": [[0.281, 0.22], [0.322, 0.19], [0.322, 0.78], [0.281, 0.75]]}
+      ]
+    },
+    "search-results": {
+      "output": "assets/masks/search-vs-prediction/search-results.png",
+      "feather": 3,
+      "shapes": [
+        {"shape": "ellipse", "box": [0.302, 0.36, 0.331, 0.46]},
+        {"shape": "ellipse", "box": [0.304, 0.46, 0.333, 0.56]},
+        {"shape": "ellipse", "box": [0.305, 0.55, 0.334, 0.65]}
+      ]
+    },
+    "decision-core": {
+      "output": "assets/masks/search-vs-prediction/decision-core.png",
+      "feather": 6,
+      "shapes": [
+        {"shape": "ellipse", "box": [0.423, 0.355, 0.568, 0.655]}
+      ]
+    },
+    "predictive-field": {
+      "output": "assets/masks/search-vs-prediction/predictive-field.png",
+      "feather": 4,
+      "shapes": [
+        {"shape": "polygon", "points": [[0.595, 0.24], [0.75, 0.20], [0.84, 0.32], [0.84, 0.74], [0.72, 0.80], [0.59, 0.68]]}
+      ]
+    },
+    "predictive-nodes": {
+      "output": "assets/masks/search-vs-prediction/predictive-nodes.png",
+      "feather": 3,
+      "shapes": [
+        {"shape": "ellipse", "box": [0.655, 0.23, 0.687, 0.31]},
+        {"shape": "ellipse", "box": [0.593, 0.30, 0.624, 0.39]},
+        {"shape": "ellipse", "box": [0.680, 0.34, 0.722, 0.45]},
+        {"shape": "ellipse", "box": [0.623, 0.39, 0.654, 0.48]},
+        {"shape": "ellipse", "box": [0.781, 0.39, 0.813, 0.48]},
+        {"shape": "ellipse", "box": [0.625, 0.48, 0.657, 0.58]},
+        {"shape": "ellipse", "box": [0.702, 0.50, 0.744, 0.62]},
+        {"shape": "ellipse", "box": [0.793, 0.49, 0.823, 0.59]},
+        {"shape": "ellipse", "box": [0.649, 0.68, 0.681, 0.77]},
+        {"shape": "ellipse", "box": [0.710, 0.64, 0.741, 0.74]},
+        {"shape": "ellipse", "box": [0.794, 0.64, 0.826, 0.74]}
+      ]
+    },
+    "outcomes": {
+      "output": "assets/masks/search-vs-prediction/outcomes.png",
+      "feather": 4,
+      "shapes": [
+        {"shape": "ellipse", "box": [0.912, 0.20, 0.950, 0.31]},
+        {"shape": "ellipse", "box": [0.912, 0.37, 0.950, 0.48]},
+        {"shape": "ellipse", "box": [0.912, 0.52, 0.950, 0.63]},
+        {"shape": "ellipse", "box": [0.912, 0.66, 0.950, 0.77]}
+      ]
+    }
+  },
+  "layers": [
+    {
+      "name": "incomplete context flicker",
+      "type": "masked_glow",
+      "mask": "search-graph",
+      "color": "#8e92bf",
+      "blur": 11,
+      "opacity": 0.24,
+      "speed": 0.28,
+      "offset": 0.2
+    },
+    {
+      "name": "historical scan",
+      "type": "scan_line",
+      "mask": "scan-plane",
+      "axis": "y",
+      "color": "#a39cff",
+      "width": 0.028,
+      "opacity": 0.72,
+      "speed": 0.31
+    },
+    {
+      "name": "search result pulse",
+      "type": "masked_glow",
+      "mask": "search-results",
+      "color": "#aaa5ff",
+      "blur": 13,
+      "opacity": 0.48,
+      "speed": 0.46,
+      "offset": 0.42
+    },
+    {
+      "name": "known fact one",
+      "type": "flow_path",
+      "points": [[0.23, 0.33], [0.27, 0.39], [0.30, 0.41], [0.32, 0.41]],
+      "color": "#aaa1ee",
+      "particles": 1,
+      "radius": 2.0,
+      "speed": 0.32
+    },
+    {
+      "name": "known fact two",
+      "type": "flow_path",
+      "points": [[0.12, 0.50], [0.21, 0.50], [0.27, 0.50], [0.32, 0.50]],
+      "color": "#aaa1ee",
+      "particles": 1,
+      "radius": 2.0,
+      "speed": 0.29,
+      "offset": 0.5
+    },
+    {
+      "name": "known context trace",
+      "type": "path_trace",
+      "points": [[0.32, 0.50], [0.37, 0.50], [0.41, 0.50], [0.45, 0.50]],
+      "color": "#b7b2ff",
+      "length": 0.36,
+      "width": 2.0,
+      "speed": 0.38
+    },
+    {
+      "name": "decision core breath",
+      "type": "masked_glow",
+      "mask": "decision-core",
+      "color": "#59dcff",
+      "blur": 28,
+      "opacity": 0.82,
+      "speed": 0.48
+    },
+    {
+      "name": "decision core sheen",
+      "type": "masked_sheen",
+      "mask": "decision-core",
+      "color": "#ffffff",
+      "width": 0.075,
+      "opacity": 0.15,
+      "speed": 0.35,
+      "offset": 0.18
+    },
+    {
+      "name": "decision confidence ripples",
+      "type": "ripple",
+      "center": [0.494, 0.505],
+      "radius": 0.145,
+      "aspect": 1.0,
+      "count": 3,
+      "color": "#58deff",
+      "width": 1.5,
+      "speed": 0.42
+    },
+    {
+      "name": "relationship activity",
+      "type": "masked_particles",
+      "mask": "predictive-field",
+      "color": "#6ee8ff",
+      "direction": "right",
+      "count": 42,
+      "seed": 29,
+      "radius": 1.2,
+      "speed": 0.055
+    },
+    {
+      "name": "rich graph breath",
+      "type": "masked_glow",
+      "mask": "predictive-nodes",
+      "color": "#61e6ff",
+      "blur": 13,
+      "opacity": 0.42,
+      "speed": 0.42,
+      "offset": 0.35
+    },
+    {
+      "name": "churn trajectory",
+      "type": "path_trace",
+      "points": [[0.54, 0.48], [0.67, 0.22], [0.82, 0.30], [0.93, 0.255]],
+      "color": "#ff9e83",
+      "length": 0.27,
+      "width": 2.2,
+      "speed": 0.32
+    },
+    {
+      "name": "fraud trajectory",
+      "type": "path_trace",
+      "points": [[0.54, 0.50], [0.67, 0.36], [0.81, 0.43], [0.93, 0.425]],
+      "color": "#67cfff",
+      "length": 0.27,
+      "width": 2.2,
+      "speed": 0.32,
+      "offset": 0.2
+    },
+    {
+      "name": "expansion trajectory",
+      "type": "path_trace",
+      "points": [[0.54, 0.52], [0.68, 0.52], [0.81, 0.56], [0.93, 0.575]],
+      "color": "#66eee4",
+      "length": 0.27,
+      "width": 2.2,
+      "speed": 0.32,
+      "offset": 0.4
+    },
+    {
+      "name": "upgrade trajectory",
+      "type": "path_trace",
+      "points": [[0.54, 0.54], [0.68, 0.69], [0.81, 0.69], [0.93, 0.705]],
+      "color": "#bd8bff",
+      "length": 0.27,
+      "width": 2.2,
+      "speed": 0.32,
+      "offset": 0.6
+    },
+    {
+      "name": "classified outcome packets one",
+      "type": "flow_path",
+      "points": [[0.79, 0.30], [0.84, 0.30], [0.89, 0.26], [0.93, 0.255]],
+      "color": "#ff9e83",
+      "particles": 2,
+      "radius": 2.2,
+      "speed": 0.48
+    },
+    {
+      "name": "classified outcome packets two",
+      "type": "flow_path",
+      "points": [[0.80, 0.43], [0.85, 0.43], [0.89, 0.425], [0.93, 0.425]],
+      "color": "#67cfff",
+      "particles": 2,
+      "radius": 2.2,
+      "speed": 0.48,
+      "offset": 0.25
+    },
+    {
+      "name": "classified outcome packets three",
+      "type": "flow_path",
+      "points": [[0.80, 0.55], [0.85, 0.56], [0.89, 0.575], [0.93, 0.575]],
+      "color": "#66eee4",
+      "particles": 2,
+      "radius": 2.2,
+      "speed": 0.48,
+      "offset": 0.5
+    },
+    {
+      "name": "classified outcome packets four",
+      "type": "flow_path",
+      "points": [[0.80, 0.69], [0.85, 0.69], [0.89, 0.705], [0.93, 0.705]],
+      "color": "#bd8bff",
+      "particles": 2,
+      "radius": 2.2,
+      "speed": 0.48,
+      "offset": 0.75
+    },
+    {
+      "name": "outcome confidence",
+      "type": "masked_glow",
+      "mask": "outcomes",
+      "color": "#83ddff",
+      "blur": 17,
+      "opacity": 0.52,
+      "speed": 0.35,
+      "offset": 0.6
+    },
+    {
+      "name": "core orbit",
+      "type": "orbit",
+      "center": [0.494, 0.505],
+      "radius": [0.083, 0.15],
+      "color": "#ffffff",
+      "particles": 2,
+      "dot_radius": 1.8,
+      "speed": 0.22
+    }
+  ],
+  "finishing": {
+    "breathe": true
+  }
+}
