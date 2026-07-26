@@ -1,6 +1,6 @@
 ---
 name: create-tech-motion
-description: Turn a plain-English technology concept into a complete animated GIF by using Codex image generation for original artwork, inspecting the generated image, deriving masks and motion paths from its actual geometry, and rendering the result with LinkedIn Motion Kit. Use for animated tech comparisons, context graphs, AI or data flows, architecture diagrams, cloud/security/developer-tool visuals, and LinkedIn graphics when the user expects generation through final animation rather than a supplied still.
+description: Turn a plain-English technology concept into a complete animated GIF or kinetic-typography MP4 by using Codex image generation for original artwork, inspecting the generated image, deriving masks and motion paths from its actual geometry, and rendering the result with LinkedIn Motion Kit. Use for animated tech comparisons, context graphs, AI or data flows, architecture diagrams, cloud/security/developer-tool visuals, LinkedIn graphics, and fully animated text slideshows when the user expects generation through final animation rather than a supplied still.
 ---
 
 # Create Tech Motion
@@ -24,7 +24,8 @@ Create the artwork and the animation. Never stop after writing a prompt, generat
 7. Run `.venv/bin/python -m motionkit presets/<slug>.json`. The renderer must generate declared mask PNGs automatically before rendering.
 8. Build a six-frame contact sheet with ImageMagick and inspect it with `view_image`.
 9. Adjust masks and paths when effects do not align with the generated geometry, then rerender.
-10. Save the final GIF at `output/<slug>.gif` and report the still, preset, masks, GIF, and exact generation prompt.
+10. For a short loop, save the final GIF at `output/<slug>.gif`. For a narrated text sequence, create `video-presets/<slug>.json` and run `.venv/bin/python -m motionkit.video video-presets/<slug>.json`.
+11. Report the still, preset, masks or deck, final media, and exact generation prompt.
 
 ## Scene mask schema
 
@@ -52,16 +53,17 @@ Use `op: "subtract"` on a shape to cut it out of prior shapes. Use `opacity` for
 
 - Use one primary visual idea per loop.
 - Animate semantic relationships: ingress, transformation, classification, branching, retrieval, or rejection.
-- Keep headings and explanatory text static.
+- Keep GIF headings static. For MP4 slideshows, render text through the video engine so wording remains exact.
+- Keep the generated background spatially stable. Animate graph nodes, routes, packets, ripples, and orbits; reserve damped jitter for short text impacts.
 - Use no more than 2–3 particles on one path unless density is the concept.
 - Offset pulses so stages read in sequence.
-- Keep the loop between 3 and 5 seconds.
+- Keep GIF loops between 3 and 5 seconds. Keep motion slideshows concise, usually 15–30 seconds.
 
 ## Required validation
 
 Verify:
 
-- the GIF opens, loops, and has the requested duration;
+- the GIF or MP4 opens and has the requested duration;
 - every effect aligns with the generated image rather than an imagined layout;
 - comparison sides remain legible in at least six sampled frames;
 - masks were generated into the project and are not only temporary files;

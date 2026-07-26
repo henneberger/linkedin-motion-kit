@@ -10,6 +10,23 @@ The art direction is called **Midnight Signal**: ink-black editorial backgrounds
 
 ![A sparse search graph transforming into a rich predictive context graph](output/search-vs-prediction.gif)
 
+### Full motion slideshow
+
+[![Context graph motion slideshow](output/context-graph-story-thumbnail.png)](output/context-graph-story.mp4)
+
+The video renderer adds large deterministic typography, text entrances, animated panels, graph-native motion, crossfades, wipes, push transitions, split-pane fades, and damped text-only impact jitter. The included deck exports a compact 1200×676 LinkedIn-compatible H.264 MP4:
+
+```bash
+python -m motionkit.video video-presets/context-graph-story.json
+```
+
+For a fast half-resolution layout review:
+
+```bash
+python -m motionkit.video video-presets/context-graph-story.json \
+  --preview -o output/context-graph-story-preview.mp4
+```
+
 ## Generate from a brief
 
 Install the bundled Codex skill once:
@@ -91,6 +108,28 @@ Image generation establishes the visual world. Local compositing handles animati
 | `masked_particles` | Drift a deterministic particle field inside a mask | `mask`, `direction`, `count`, `seed`, `speed` |
 
 Coordinates are normalized: `[0, 0]` is top-left and `[1, 1]` is bottom-right. A `flow_path` accepts 2 points for a line, 3 for a quadratic curve, or 4 for a cubic Bézier curve.
+
+## Video deck reference
+
+Video decks live in `video-presets/`. Each slide controls its duration, background treatment, transition, and elements. Global motion layers animate the graph itself while keeping the generated artwork spatially locked.
+
+Supported element entrances:
+
+- fade;
+- slide from any direction;
+- scale with optional overshoot;
+- damped jitter for short impact moments.
+
+Use jitter on text only. Prefer graph-native pulses, relationship traces, packets, ripples, and orbits over moving the entire background image.
+
+Supported scene transitions:
+
+- crossfade;
+- horizontal push;
+- soft wipe;
+- split-pane fade.
+
+Text remains code-rendered rather than baked into generated artwork, so wording stays exact and can be changed without regenerating the visual.
 
 ## A useful layer recipe
 

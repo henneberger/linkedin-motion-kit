@@ -7,3 +7,5 @@ output/*
 !output/abstract-graph.gif
 !output/context-graphs.gif
 !output/search-vs-prediction.gif
+!output/context-graph-story.mp4
+!output/context-graph-story-thumbnail.png

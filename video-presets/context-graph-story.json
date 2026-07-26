@@ -1,0 +1,745 @@
+{
+  "name": "Midnight Signal — Context Graph Story",
+  "background": "assets/source/context-graph-slideshow/base.png",
+  "output": "output/context-graph-story.mp4",
+  "thumbnail": "output/context-graph-story-thumbnail.png",
+  "thumbnail_time": 1.8,
+  "canvas": {
+    "width": 1200,
+    "height": 676,
+    "fps": 24,
+    "crf": 22,
+    "preset": "veryfast"
+  },
+  "fonts": {
+    "regular": "/System/Library/Fonts/Supplemental/Arial.ttf",
+    "bold": "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+    "mono": "/System/Library/Fonts/SFNSMono.ttf"
+  },
+  "motion_layers": [
+    {
+      "name": "decision core ripple",
+      "type": "ripple",
+      "center": [0.475, 0.507],
+      "radius": 0.115,
+      "aspect": 1.0,
+      "count": 3,
+      "color": "#58deff",
+      "width": 2.0,
+      "speed": 0.24
+    },
+    {
+      "name": "decision orbit",
+      "type": "orbit",
+      "center": [0.475, 0.507],
+      "radius": [0.058, 0.105],
+      "color": "#dffaff",
+      "particles": 2,
+      "dot_radius": 3.4,
+      "speed": 0.11
+    },
+    {
+      "name": "incoming context",
+      "type": "flow_path",
+      "points": [[0.20, 0.56], [0.30, 0.47], [0.40, 0.52], [0.475, 0.507]],
+      "color": "#aca3f0",
+      "particles": 2,
+      "radius": 3.7,
+      "speed": 0.15
+    },
+    {
+      "name": "top outcome trace",
+      "type": "path_trace",
+      "points": [[0.50, 0.49], [0.65, 0.25], [0.80, 0.28], [0.936, 0.239]],
+      "color": "#55e7ff",
+      "length": 0.24,
+      "width": 3.2,
+      "speed": 0.13
+    },
+    {
+      "name": "top outcome packets",
+      "type": "flow_path",
+      "points": [[0.50, 0.49], [0.65, 0.25], [0.80, 0.28], [0.936, 0.239]],
+      "color": "#55e7ff",
+      "particles": 2,
+      "radius": 4.0,
+      "speed": 0.17
+    },
+    {
+      "name": "coral outcome trace",
+      "type": "path_trace",
+      "points": [[0.50, 0.50], [0.67, 0.36], [0.82, 0.43], [0.936, 0.413]],
+      "color": "#ff9f86",
+      "length": 0.24,
+      "width": 3.2,
+      "speed": 0.13,
+      "offset": 0.22
+    },
+    {
+      "name": "coral outcome packets",
+      "type": "flow_path",
+      "points": [[0.50, 0.50], [0.67, 0.36], [0.82, 0.43], [0.936, 0.413]],
+      "color": "#ff9f86",
+      "particles": 2,
+      "radius": 4.0,
+      "speed": 0.17,
+      "offset": 0.24
+    },
+    {
+      "name": "orange outcome trace",
+      "type": "path_trace",
+      "points": [[0.50, 0.52], [0.67, 0.55], [0.82, 0.58], [0.936, 0.586]],
+      "color": "#ffb04e",
+      "length": 0.24,
+      "width": 3.2,
+      "speed": 0.13,
+      "offset": 0.44
+    },
+    {
+      "name": "orange outcome packets",
+      "type": "flow_path",
+      "points": [[0.50, 0.52], [0.67, 0.55], [0.82, 0.58], [0.936, 0.586]],
+      "color": "#ffb04e",
+      "particles": 2,
+      "radius": 4.0,
+      "speed": 0.17,
+      "offset": 0.48
+    },
+    {
+      "name": "purple outcome trace",
+      "type": "path_trace",
+      "points": [[0.50, 0.54], [0.67, 0.70], [0.82, 0.72], [0.936, 0.752]],
+      "color": "#be8dff",
+      "length": 0.24,
+      "width": 3.2,
+      "speed": 0.13,
+      "offset": 0.66
+    },
+    {
+      "name": "purple outcome packets",
+      "type": "flow_path",
+      "points": [[0.50, 0.54], [0.67, 0.70], [0.82, 0.72], [0.936, 0.752]],
+      "color": "#be8dff",
+      "particles": 2,
+      "radius": 4.0,
+      "speed": 0.17,
+      "offset": 0.72
+    }
+  ],
+  "slides": [
+    {
+      "duration": 3.6,
+      "background": {
+        "zoom": [1.0, 1.0],
+        "focus_from": [0.5, 0.5],
+        "focus_to": [0.5, 0.5],
+        "dim": 0.52,
+        "tint": "#020813"
+      },
+      "elements": [
+        {
+          "type": "rule",
+          "x": 0.065,
+          "y": 0.12,
+          "width": 0.13,
+          "thickness": 5,
+          "color": "#59e1ff",
+          "delay": 0.08,
+          "enter_duration": 0.55
+        },
+        {
+          "type": "text",
+          "text": "CONTEXT GRAPHS",
+          "x": 0.065,
+          "y": 0.155,
+          "size": 31,
+          "font": "mono",
+          "color": "#65def7",
+          "enter": "slide_up",
+          "delay": 0.15,
+          "enter_duration": 0.55
+        },
+        {
+          "type": "text",
+          "text": "THE GRAPH ISN’T\nJUST FOR SEARCH.",
+          "x": 0.06,
+          "y": 0.235,
+          "max_width": 0.72,
+          "size": 112,
+          "font": "bold",
+          "color": "#f1f7ff",
+          "spacing": 0.05,
+          "enter": "slide_up",
+          "easing": "back",
+          "delay": 0.38,
+          "enter_duration": 0.78
+        },
+        {
+          "type": "text",
+          "text": "Search explains what is already known.",
+          "x": 0.065,
+          "y": 0.69,
+          "max_width": 0.52,
+          "size": 44,
+          "font": "regular",
+          "color": "#b7c8da",
+          "enter": "slide_left",
+          "delay": 1.15,
+          "enter_duration": 0.68
+        }
+      ]
+    },
+    {
+      "duration": 4.2,
+      "transition": {
+        "type": "split_fade",
+        "duration": 0.85
+      },
+      "background": {
+        "zoom": [1.0, 1.0],
+        "focus_from": [0.5, 0.5],
+        "focus_to": [0.5, 0.5],
+        "dim": 0.60,
+        "tint": "#020711"
+      },
+      "elements": [
+        {
+          "type": "panel",
+          "x": 0.04,
+          "y": 0.09,
+          "width": 0.44,
+          "height": 0.82,
+          "radius": 0.018,
+          "color": "#15152c",
+          "outline": "#605986",
+          "opacity": 0.88,
+          "enter": "slide_left",
+          "delay": 0.30,
+          "enter_duration": 0.72
+        },
+        {
+          "type": "panel",
+          "x": 0.52,
+          "y": 0.09,
+          "width": 0.44,
+          "height": 0.82,
+          "radius": 0.018,
+          "color": "#082735",
+          "outline": "#2483a1",
+          "opacity": 0.88,
+          "enter": "slide_right",
+          "delay": 0.30,
+          "enter_duration": 0.72
+        },
+        {
+          "type": "text",
+          "text": "THIN CONTEXT",
+          "x": 0.08,
+          "y": 0.16,
+          "size": 76,
+          "font": "bold",
+          "color": "#b4a8ef",
+          "enter": "slide_left",
+          "delay": 0.62,
+          "enter_duration": 0.62
+        },
+        {
+          "type": "text",
+          "text": "Isolated rows",
+          "x": 0.08,
+          "y": 0.36,
+          "size": 50,
+          "font": "regular",
+          "color": "#eef3ff",
+          "enter": "slide_left",
+          "delay": 1.05
+        },
+        {
+          "type": "text",
+          "text": "Missing relationships",
+          "x": 0.08,
+          "y": 0.49,
+          "size": 50,
+          "font": "regular",
+          "color": "#eef3ff",
+          "enter": "slide_left",
+          "delay": 1.35
+        },
+        {
+          "type": "text",
+          "text": "Blind spots",
+          "x": 0.08,
+          "y": 0.62,
+          "size": 50,
+          "font": "bold",
+          "color": "#ff9c85",
+          "enter": "slide_left",
+          "delay": 1.65,
+          "jitter": {
+            "start": 2.35,
+            "duration": 0.46,
+            "amplitude": 9,
+            "frequency": 27
+          }
+        },
+        {
+          "type": "text",
+          "text": "RICH CONTEXT",
+          "x": 0.56,
+          "y": 0.16,
+          "size": 76,
+          "font": "bold",
+          "color": "#62e4ff",
+          "enter": "slide_right",
+          "delay": 0.62,
+          "enter_duration": 0.62
+        },
+        {
+          "type": "text",
+          "text": "Customers ↔ products",
+          "x": 0.56,
+          "y": 0.36,
+          "size": 50,
+          "font": "regular",
+          "color": "#eefcff",
+          "enter": "slide_right",
+          "delay": 1.05
+        },
+        {
+          "type": "text",
+          "text": "Events ↔ behavior",
+          "x": 0.56,
+          "y": 0.49,
+          "size": 50,
+          "font": "regular",
+          "color": "#eefcff",
+          "enter": "slide_right",
+          "delay": 1.35
+        },
+        {
+          "type": "text",
+          "text": "Decisions with context",
+          "x": 0.56,
+          "y": 0.62,
+          "size": 50,
+          "font": "bold",
+          "color": "#ffb08f",
+          "enter": "slide_right",
+          "delay": 1.65
+        }
+      ]
+    },
+    {
+      "duration": 4.2,
+      "transition": {
+        "type": "push_left",
+        "duration": 0.72
+      },
+      "background": {
+        "zoom": [1.0, 1.0],
+        "focus_from": [0.5, 0.5],
+        "focus_to": [0.5, 0.5],
+        "dim": 0.52,
+        "tint": "#020b16"
+      },
+      "elements": [
+        {
+          "type": "text",
+          "text": "PREDICTION STRESS-TESTS\nTHE GRAPH.",
+          "x": 0.055,
+          "y": 0.09,
+          "max_width": 0.86,
+          "size": 92,
+          "font": "bold",
+          "color": "#f1f8ff",
+          "spacing": 0.06,
+          "enter": "slide_up",
+          "delay": 0.48,
+          "enter_duration": 0.72
+        },
+        {
+          "type": "panel",
+          "x": 0.055,
+          "y": 0.43,
+          "width": 0.275,
+          "height": 0.35,
+          "color": "#111c2c",
+          "outline": "#52627b",
+          "opacity": 0.88,
+          "enter": "slide_up",
+          "delay": 1.05
+        },
+        {
+          "type": "text",
+          "text": "INCOMPLETE\nCONTEXT",
+          "x": 0.08,
+          "y": 0.49,
+          "size": 47,
+          "font": "bold",
+          "color": "#c2cedd",
+          "spacing": 0.08,
+          "enter": "slide_up",
+          "delay": 1.22
+        },
+        {
+          "type": "text",
+          "text": "Weak signal",
+          "x": 0.08,
+          "y": 0.68,
+          "size": 34,
+          "font": "regular",
+          "color": "#879bb4",
+          "enter": "fade",
+          "delay": 1.62
+        },
+        {
+          "type": "panel",
+          "x": 0.3625,
+          "y": 0.43,
+          "width": 0.275,
+          "height": 0.35,
+          "color": "#281817",
+          "outline": "#965d53",
+          "opacity": 0.90,
+          "enter": "slide_up",
+          "delay": 1.32
+        },
+        {
+          "type": "text",
+          "text": "MISSING\nRELATIONSHIP",
+          "x": 0.387,
+          "y": 0.49,
+          "size": 47,
+          "font": "bold",
+          "color": "#ffd5cb",
+          "spacing": 0.08,
+          "enter": "slide_up",
+          "delay": 1.48
+        },
+        {
+          "type": "text",
+          "text": "BLIND SPOT",
+          "x": 0.387,
+          "y": 0.68,
+          "size": 34,
+          "font": "bold",
+          "color": "#ff9c85",
+          "enter": "scale",
+          "easing": "back",
+          "delay": 1.86,
+          "jitter": {
+            "start": 2.48,
+            "duration": 0.52,
+            "amplitude": 11,
+            "frequency": 29
+          }
+        },
+        {
+          "type": "panel",
+          "x": 0.67,
+          "y": 0.43,
+          "width": 0.275,
+          "height": 0.35,
+          "color": "#082c38",
+          "outline": "#36a8bf",
+          "opacity": 0.90,
+          "enter": "slide_up",
+          "delay": 1.60
+        },
+        {
+          "type": "text",
+          "text": "COMPLETE\nGRAPH",
+          "x": 0.695,
+          "y": 0.49,
+          "size": 47,
+          "font": "bold",
+          "color": "#cbf9ff",
+          "spacing": 0.08,
+          "enter": "slide_up",
+          "delay": 1.76
+        },
+        {
+          "type": "text",
+          "text": "Stronger outcome",
+          "x": 0.695,
+          "y": 0.68,
+          "size": 34,
+          "font": "bold",
+          "color": "#65e4ff",
+          "enter": "fade",
+          "delay": 2.15
+        }
+      ]
+    },
+    {
+      "duration": 4.0,
+      "transition": {
+        "type": "wipe",
+        "duration": 0.72
+      },
+      "background": {
+        "zoom": [1.0, 1.0],
+        "focus_from": [0.5, 0.5],
+        "focus_to": [0.5, 0.5],
+        "dim": 0.46,
+        "tint": "#020b15"
+      },
+      "elements": [
+        {
+          "type": "text",
+          "text": "FOUR DECISIONS.\nONE GRAPH.",
+          "x": 0.055,
+          "y": 0.09,
+          "size": 88,
+          "font": "bold",
+          "color": "#f0f8ff",
+          "spacing": 0.04,
+          "enter": "slide_left",
+          "easing": "back",
+          "delay": 0.46
+        },
+        {
+          "type": "text",
+          "text": "The relationships surrounding each decision are the feature.",
+          "x": 0.055,
+          "y": 0.34,
+          "max_width": 0.75,
+          "size": 40,
+          "font": "regular",
+          "color": "#adc0d4",
+          "enter": "slide_left",
+          "delay": 1.00
+        },
+        {
+          "type": "panel",
+          "x": 0.055,
+          "y": 0.57,
+          "width": 0.205,
+          "height": 0.22,
+          "color": "#2a1818",
+          "outline": "#b96e5e",
+          "opacity": 0.92,
+          "enter": "slide_up",
+          "delay": 1.26
+        },
+        {
+          "type": "text",
+          "text": "CHURN",
+          "x": 0.075,
+          "y": 0.625,
+          "size": 47,
+          "font": "bold",
+          "color": "#ffad98",
+          "enter": "slide_up",
+          "delay": 1.43
+        },
+        {
+          "type": "panel",
+          "x": 0.282,
+          "y": 0.57,
+          "width": 0.205,
+          "height": 0.22,
+          "color": "#0c2738",
+          "outline": "#4c9dc9",
+          "opacity": 0.92,
+          "enter": "slide_up",
+          "delay": 1.48
+        },
+        {
+          "type": "text",
+          "text": "FRAUD",
+          "x": 0.302,
+          "y": 0.625,
+          "size": 47,
+          "font": "bold",
+          "color": "#7bd3ff",
+          "enter": "slide_up",
+          "delay": 1.65
+        },
+        {
+          "type": "panel",
+          "x": 0.509,
+          "y": 0.57,
+          "width": 0.205,
+          "height": 0.22,
+          "color": "#082d2f",
+          "outline": "#45afa8",
+          "opacity": 0.92,
+          "enter": "slide_up",
+          "delay": 1.70
+        },
+        {
+          "type": "text",
+          "text": "EXPANSION",
+          "x": 0.529,
+          "y": 0.625,
+          "size": 43,
+          "font": "bold",
+          "color": "#7aeee5",
+          "enter": "slide_up",
+          "delay": 1.87
+        },
+        {
+          "type": "panel",
+          "x": 0.736,
+          "y": 0.57,
+          "width": 0.205,
+          "height": 0.22,
+          "color": "#241a35",
+          "outline": "#8c69ba",
+          "opacity": 0.92,
+          "enter": "slide_up",
+          "delay": 1.92
+        },
+        {
+          "type": "text",
+          "text": "UPGRADE",
+          "x": 0.756,
+          "y": 0.625,
+          "size": 47,
+          "font": "bold",
+          "color": "#c49cff",
+          "enter": "slide_up",
+          "delay": 2.09
+        }
+      ]
+    },
+    {
+      "duration": 4.0,
+      "transition": {
+        "type": "split_fade",
+        "duration": 0.82
+      },
+      "background": {
+        "zoom": [1.0, 1.0],
+        "focus_from": [0.5, 0.5],
+        "focus_to": [0.5, 0.5],
+        "dim": 0.67,
+        "tint": "#020711"
+      },
+      "elements": [
+        {
+          "type": "panel",
+          "x": 0.0,
+          "y": 0.0,
+          "width": 0.5,
+          "height": 1.0,
+          "radius": 0.0,
+          "color": "#121426",
+          "outline": "#121426",
+          "opacity": 0.94,
+          "enter": "slide_left",
+          "delay": 0.16,
+          "enter_duration": 0.70
+        },
+        {
+          "type": "panel",
+          "x": 0.5,
+          "y": 0.0,
+          "width": 0.5,
+          "height": 1.0,
+          "radius": 0.0,
+          "color": "#062633",
+          "outline": "#062633",
+          "opacity": 0.94,
+          "enter": "slide_right",
+          "delay": 0.16,
+          "enter_duration": 0.70
+        },
+        {
+          "type": "text",
+          "text": "SEARCH\nEXPLAINS\nTHE PAST.",
+          "x": 0.06,
+          "y": 0.22,
+          "max_width": 0.38,
+          "size": 88,
+          "font": "bold",
+          "color": "#c4b8f3",
+          "spacing": 0.07,
+          "enter": "slide_left",
+          "easing": "back",
+          "delay": 0.68
+        },
+        {
+          "type": "text",
+          "text": "PREDICTION\nANTICIPATES\nTHE NEXT.",
+          "x": 0.56,
+          "y": 0.22,
+          "max_width": 0.39,
+          "size": 88,
+          "font": "bold",
+          "color": "#72e7ff",
+          "spacing": 0.07,
+          "enter": "slide_right",
+          "easing": "back",
+          "delay": 0.68
+        },
+        {
+          "type": "text",
+          "text": "Same graph. Bigger job.",
+          "x": 0.5,
+          "y": 0.82,
+          "anchor": "center",
+          "size": 40,
+          "font": "mono",
+          "color": "#ffac93",
+          "enter": "slide_up",
+          "delay": 1.62
+        }
+      ]
+    },
+    {
+      "duration": 3.6,
+      "transition": {
+        "type": "fade",
+        "duration": 0.75
+      },
+      "background": {
+        "zoom": [1.0, 1.0],
+        "focus_from": [0.5, 0.5],
+        "focus_to": [0.5, 0.5],
+        "dim": 0.56,
+        "tint": "#020813"
+      },
+      "elements": [
+        {
+          "type": "rule",
+          "x": 0.075,
+          "y": 0.18,
+          "width": 0.16,
+          "thickness": 6,
+          "color": "#ff9f85",
+          "delay": 0.38,
+          "enter_duration": 0.58
+        },
+        {
+          "type": "text",
+          "text": "BUILD THE GRAPH\nAROUND THE DECISION.",
+          "x": 0.07,
+          "y": 0.26,
+          "max_width": 0.86,
+          "size": 108,
+          "font": "bold",
+          "color": "#f2f8ff",
+          "spacing": 0.05,
+          "enter": "slide_up",
+          "easing": "back",
+          "delay": 0.58,
+          "enter_duration": 0.82
+        },
+        {
+          "type": "text",
+          "text": "Not the query.",
+          "x": 0.075,
+          "y": 0.71,
+          "size": 54,
+          "font": "regular",
+          "color": "#74e6ff",
+          "enter": "slide_left",
+          "delay": 1.42,
+          "enter_duration": 0.68
+        }
+      ]
+    }
+  ]
+}
