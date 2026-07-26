@@ -4,6 +4,8 @@ A small, local pipeline for turning a Codex-generated tech illustration into a p
 
 The art direction is called **Midnight Signal**: ink-black editorial backgrounds, glass and anodized-metal forms, cyan/coral/lilac accents, and motion that feels precise rather than hyperactive.
 
+![Midnight Signal abstract graph animation](output/abstract-graph.gif)
+
 ## What is included
 
 - A generated abstract-graph base image in `assets/source/`
